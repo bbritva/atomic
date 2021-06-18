@@ -8,9 +8,10 @@
 # include <pthread.h>
 # include "stdatomic.h"
 
-# define MAXSIZE 1000
+# define MAXSIZE 100000
 # define SIZE 2 * MAXSIZE
-# define THREAD_COUNT 100
+# define THREAD_COUNT 1000
+# define SLEEP_TIME 1000
 
 typedef struct		s_stack_fix {
 	atomic_int		data[SIZE];

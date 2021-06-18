@@ -1,6 +1,6 @@
 #include "atomic.h"
 
-void *atomic_feel_stack(void *stk)
+void *atomic_fill_stack(void *stk)
 {
 	int i;
 	
@@ -10,7 +10,7 @@ void *atomic_feel_stack(void *stk)
 	return (NULL);
 }
 
-void *feel_stack(void *stk)
+void *fill_stack(void *stk)
 {
 	int i;
 	
@@ -48,7 +48,7 @@ int main()
 		i = 0;
 		while (i < THREAD_COUNT)
 		{
-			pthread_create(&t1[i], NULL, feel_stack, (void *)stk);
+			pthread_create(&t1[i], NULL, fill_stack, (void *) stk);
 			i++;
 		}
 		i = 0;
@@ -58,10 +58,10 @@ int main()
 			i++;
 		}
 		printf("stk size = %lu\n", stk->size);
+		show_stk(stk);
+		free(stk);
+		stk = NULL;
 	}
-	show_stk(stk);
-	free(stk);
-	stk = NULL;
 	
 //	заполняем стек с помощью атомиков
 	stk = (t_stack_fix *)calloc(1, sizeof(t_stack_fix));
@@ -71,7 +71,7 @@ int main()
 		i = 0;
 		while (i < THREAD_COUNT)
 		{
-			pthread_create(&t1[i], NULL, atomic_feel_stack, (void *)stk);
+			pthread_create(&t1[i], NULL, atomic_fill_stack, (void *) stk);
 			i++;
 		}
 		i = 0;
@@ -81,9 +81,9 @@ int main()
 			i++;
 		}
 		printf("atomic stk size = %lu\n", stk->size);
+		show_stk(stk);
+		free(stk);
+		stk = NULL;
 	}
-	show_stk(stk);
-	free(stk);
-	stk = NULL;
 	return(0);
 }
