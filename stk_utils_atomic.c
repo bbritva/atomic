@@ -6,7 +6,7 @@ int atomic_push(struct s_stack_fix *stk, const int value) {
 		atomic_fetch_add(&stk->size, 1)))
 		return(0);
 	usleep(1000);
-	atomic_store(&stk->data[stk->size], value);
+	atomic_store(&stk->data[max], value);
 	return (1);
 }
 
