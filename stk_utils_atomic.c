@@ -46,9 +46,6 @@ int atomic_pop(struct s_stack_fix *stk, atomic_int *value) {
 }
 
 int atomic_peek(struct s_stack_fix *stk, atomic_int *value) {
-	if (stk->size <= 0) {
-		return(0);
-	}
-	*value = stk->data[stk->size - 1];
+	*value = atomic_load(&stk->data[stk->size]);
 	return (1);
 }
