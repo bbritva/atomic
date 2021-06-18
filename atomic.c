@@ -24,10 +24,12 @@ int show_stk(t_stack_fix *stk)
 {
 	int i;
 	
-//	i = MAXSIZE - 50;
-	i = 0;
-	while (i < MAXSIZE)
-		printf("%d\n", stk->data[i++]);
+	i = MAXSIZE - 5;
+	while (i < MAXSIZE + 5)
+	{
+		printf("stk[%d] = %d\n", i, stk->data[i]);
+		i++;
+	}
 	return (0);
 }
 
@@ -37,17 +39,8 @@ int main()
 	pthread_t t1[THREAD_COUNT];
 	int i;
 
-//	stk = (t_stack_fix *)calloc(1, sizeof(t_stack_fix));
-//	if (stk)
-//	{
-//		stk->size = 0;
-//		pthread_create(&t1[0], NULL, feel_stack, (void *)stk);
-//		pthread_join(t1[0], NULL);
-//		printf("stk size = %lu\n", stk->size);
-//	}
-//	free(stk);
-//	stk = NULL;
 	
+//	заполняем стек простой функцией
 	stk = (t_stack_fix *)calloc(1, sizeof(t_stack_fix));
 	if (stk)
 	{
@@ -66,10 +59,11 @@ int main()
 		}
 		printf("stk size = %lu\n", stk->size);
 	}
-//	show_stk(stk);
+	show_stk(stk);
 	free(stk);
 	stk = NULL;
-
+	
+//	заполняем стек с помощью атомиков
 	stk = (t_stack_fix *)calloc(1, sizeof(t_stack_fix));
 	if (stk)
 	{
