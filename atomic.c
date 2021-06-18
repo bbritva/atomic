@@ -1,25 +1,38 @@
 #include "atomic.h"
 
-int	feel_stack(t_stack **stk)
+void *feel_stack(void *stk)
 {
-	atomic_int aInt;
-
-	(void)stk;
-	aInt = 5;
-	atomic_load(&aInt);
-	return(0);
+	int i;
+	
+	i = 0;
+	while (i < 1000 && push((t_stack_fix *)stk, i))
+		i++;
+	return (NULL);
 }
 
 int main()
 {
-	t_stack **stk;
+	t_stack_fix *stk;
+	pthread_t t1[T_COUNT];
+	int i;
 
-	stk = (t_stack **)calloc(1, sizeof(t_stack *));
+	stk = (t_stack_fix *)calloc(1, sizeof(t_stack_fix));
 	if (stk)
 	{
-		feel_stack(stk);
+		i = 0;
+		while (i < T_COUNT)
+		{
+			pthread_create(&t1[i], NULL, feel_stack, (void *)stk);
+			i++;
+		}
+		i = 0;
+		while (i < T_COUNT)
+		{
+			pthread_join(t1[i], NULL);
+			i++;
+		}
+		printf("stk size = %lu\n", stk->size);
 	}
 	free(stk);
-	printf("hello\n");
 	return(0);
 }

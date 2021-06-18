@@ -2,7 +2,7 @@ NAME		=	atomic
 CCF			=	gcc $(CFLAGS)
 RM			=	rm -f
 CFLAGS		=	-Wall -Wextra -Werror -g
-SRCS		=	atomic.c
+SRCS		=	atomic.c stk_utils.c
 HDR			=	atomic.h
 OBJS		=	$(SRCS:.c=.o)
 
