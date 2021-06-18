@@ -10,7 +10,7 @@
 
 # define MAXSIZE 1000
 # define SIZE 2 * MAXSIZE
-# define T_COUNT 3
+# define THREAD_COUNT 100
 
 typedef struct		s_stack_fix {
 	atomic_int		data[SIZE];
@@ -22,8 +22,8 @@ int pop(struct s_stack_fix *stk, int *value);
 int peek(struct s_stack_fix *stk, int *value);
 
 int atomic_push(struct s_stack_fix *stk, int value);
-int atomic_pop(struct s_stack_fix *stk, int *value);
-int atomic_peek(struct s_stack_fix *stk, int *value);
+int atomic_pop(struct s_stack_fix *stk, atomic_int *value);
+int atomic_peek(struct s_stack_fix *stk, atomic_int *value);
 
 
 typedef struct		s_stack {
