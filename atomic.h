@@ -9,17 +9,21 @@
 # include "stdatomic.h"
 
 # define MAXSIZE 1000
-# define SIZE 2000
-# define T_COUNT 10
+# define SIZE 2 * MAXSIZE
+# define T_COUNT 3
 
-typedef struct s_stack_fix {
-	int data[SIZE];
-	size_t size;
-} t_stack_fix;
+typedef struct		s_stack_fix {
+	atomic_int		data[SIZE];
+	atomic_size_t	size;
+}					t_stack_fix;
 
 int push(struct s_stack_fix *stk, int value);
 int pop(struct s_stack_fix *stk, int *value);
 int peek(struct s_stack_fix *stk, int *value);
+
+int atomic_push(struct s_stack_fix *stk, int value);
+int atomic_pop(struct s_stack_fix *stk, int *value);
+int atomic_peek(struct s_stack_fix *stk, int *value);
 
 
 typedef struct		s_stack {
