@@ -1,12 +1,13 @@
 #include "atomic.h"
 
 int atomic_push(struct s_stack_fix *stk, const int value) {
-	atomic_size_t max = MAXSIZE;
-	if (atomic_compare_exchange_strong(&(stk->size), (size_t *) &max,
+	size_t max = MAXSIZE;
+	if (atomic_compare_exchange_strong(&(stk->size), &max,
 		atomic_fetch_add(&stk->size, 1)))
 		return(0);
 	usleep(1000);
-	atomic_store(&stk->data[max], value);
+	if (max < 1000)
+		atomic_store(&stk->data[max], value);
 	return (1);
 }
 
