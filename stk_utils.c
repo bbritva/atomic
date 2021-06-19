@@ -1,6 +1,12 @@
 #include "atomic.h"
 
-int push(struct s_stack_fix *stk, const int value) {
+/**
+ * пока один поток спит, другой может изменить стек, и запись произойдет
+ * не туда, куда должна была
+ */
+
+int push(struct s_stack_fix *stk, const int value)
+{
 	if (stk->size >= MAXSIZE) {
 		return(0);
 	}
@@ -10,7 +16,8 @@ int push(struct s_stack_fix *stk, const int value) {
 	return (1);
 }
 
-int pop(struct s_stack_fix *stk, int *value) {
+int pop(struct s_stack_fix *stk, int *value)
+{
 	if (stk->size == 0) {
 		return(0);
 	}
@@ -19,7 +26,8 @@ int pop(struct s_stack_fix *stk, int *value) {
 	return (1);
 }
 
-int peek(struct s_stack_fix *stk, int *value) {
+int peek(struct s_stack_fix *stk, int *value)
+{
 	if (stk->size <= 0) {
 		return(0);
 	}

@@ -1,27 +1,20 @@
 #include "atomic.h"
-//
-//int atomic_push(struct s_stack_fix *stk, const int value) {
-//	size_t max = MAXSIZE;
-//	if (atomic_compare_exchange_strong(&(stk->size), &max,
-//		atomic_fetch_add(&stk->size, 1)))
-//		return(0);
-//	usleep(1000);
-//	if (max < 1000)
-//		atomic_store(&stk->data[max], value);
-//	else
-//		return (0);
-//	return (1);
-//}
 
+/**
+ * Здесь с помощью атомарной функции мы увеличили размер стека на единицу,
+ * и она вернула индекс элемента, в который должны положить новое значение.
+ * Если размер не вышел за пределы, кладем значение, если вышел - уменьшаем 
+ * на единицу размер и возвращаем 0
+ */
 
-int atomic_push(struct s_stack_fix *stk, const int value) {
+int atomic_push(struct s_stack_fix *stk, atomic_int value)
+{
 	atomic_int curr;
-	
+
 	curr = atomic_fetch_add(&stk->size, 1);
 	usleep(SLEEP_TIME);
 	if (curr < MAXSIZE)
 		stk->data[curr] = value;
-//		atomic_store(&stk->data[curr], value);
 	else
 	{
 		atomic_fetch_sub(&stk->size, 1);
@@ -30,7 +23,16 @@ int atomic_push(struct s_stack_fix *stk, const int value) {
 	return (1);
 }
 
-int atomic_pop(struct s_stack_fix *stk, atomic_int *value) {
+/**
+ * Здесь с помощью атомарной функции мы уменьшили размер стека на единицу,
+ * и она вернула индекс элемента, следующего за тем, из которого мы должны 
+ * брать значение.
+ * Если размер не вышел за пределы, записываем значение в переданный адрес, 
+ * если вышел - увеличиваем на единицу и возвращаем 0
+ */
+
+int atomic_pop(struct s_stack_fix *stk, atomic_int *value)
+{
 	atomic_int curr;
 
 	curr = atomic_fetch_sub(&stk->size, 1);
@@ -45,7 +47,15 @@ int atomic_pop(struct s_stack_fix *stk, atomic_int *value) {
 	return (1);
 }
 
-int atomic_peek(struct s_stack_fix *stk, atomic_int *value) {
+/**
+ * Здесь с помощью атомарной функции мы получаем индекс элемента, следующего за 
+ * тем, из которого мы должны брать значение.
+ * Если индекс не вышел за пределы, записываем значение в переданный адрес, 
+ * если вышел - возвращаем 0
+ */
+
+int atomic_peek(struct s_stack_fix *stk, atomic_int *value)
+{
 	atomic_int curr;
 
 	curr = atomic_load(&stk->size);

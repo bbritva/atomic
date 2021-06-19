@@ -31,7 +31,7 @@ void *fill_stack(void *stk)
 	return (NULL);
 }
 
-int show_stk(t_stack_fix *stk)
+int show_stack(t_stack_fix *stk)
 {
 	int i;
 	
@@ -46,13 +46,15 @@ int show_stk(t_stack_fix *stk)
 
 int main()
 {
-	t_stack_fix *stk;
-	pthread_t t1[THREAD_COUNT];
-	int i;
-	atomic_int value;
+	t_stack_fix	*stk;
+	pthread_t	t1[THREAD_COUNT];
+	int			i;
+	atomic_int	value;
 
 	
-//	заполняем стек простой функцией
+	/**	
+	 * заполняем стек простой функцией
+	*/
 	stk = (t_stack_fix *)calloc(1, sizeof(t_stack_fix));
 	if (stk)
 	{
@@ -69,15 +71,19 @@ int main()
 			pthread_join(t1[i], NULL);
 			i++;
 		}
-// при потоконебезопасной функции размер стека выходит за ограничение и 
-// происходит запись в элементы за максимальным размером 
+		/**
+		 * при потоконебезопасной функции размер стека выходит за ограничение и
+		 * происходит запись в элементы за максимальным размером
+		*/
 		printf("stk size = %d\n", stk->size);
-		show_stk(stk);
+		show_stack(stk);
 		free(stk);
 		stk = NULL;
 	}
 	
-//	заполняем стек с помощью атомиков
+	/**
+	 * заполняем стек с помощью атомиков
+	 */
 	stk = (t_stack_fix *)calloc(1, sizeof(t_stack_fix));
 	if (stk)
 	{
@@ -94,17 +100,24 @@ int main()
 			pthread_join(t1[i], NULL);
 			i++;
 		}
-// при использовании атомиков размер стека не выходит за ограничение и 
-// запись в элементы за максимальным размером не происходит 
+		/**
+		 * при использовании атомиков размер стека не выходит за ограничение и 
+		 * запись в элементы за максимальным размером не происходит
+		 */
+ 
 		printf("atomic stk size = %d\n", stk->size);
-		show_stk(stk);
-// смотрим значение наверху стека
+		show_stack(stk);
+		/**
+		 * смотрим значение наверху стека
+		 */
 		if (atomic_peek(stk, &value))
 			printf("peeked value = %d\n", value);
 		else
 			printf("nothing to peek\n");
 
-// опустошаем стек
+		/**
+		 * опустошаем стек с помощью атомиков
+		 */
 		i = 0;
 		while (i < THREAD_COUNT)
 		{
@@ -118,7 +131,9 @@ int main()
 			i++;
 		}
 		printf("atomic stk size = %d\n", stk->size);
-// смотрим значение наверху стека (стек пуст - смотреть нечего)
+		/**
+		 * смотрим значение наверху стека (стек пуст - смотреть нечего)
+		 */ 
 		if (atomic_peek(stk, &value))
 			printf("peeked value = %d\n", value);
 		else
