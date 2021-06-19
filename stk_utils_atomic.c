@@ -15,7 +15,7 @@
 
 
 int atomic_push(struct s_stack_fix *stk, const int value) {
-	size_t curr;
+	atomic_int curr;
 	
 	curr = atomic_fetch_add(&stk->size, 1);
 	usleep(SLEEP_TIME);
@@ -31,7 +31,7 @@ int atomic_push(struct s_stack_fix *stk, const int value) {
 }
 
 int atomic_pop(struct s_stack_fix *stk, atomic_int *value) {
-	size_t curr;
+	atomic_int curr;
 
 	curr = atomic_fetch_sub(&stk->size, 1);
 	usleep(SLEEP_TIME);
@@ -46,6 +46,12 @@ int atomic_pop(struct s_stack_fix *stk, atomic_int *value) {
 }
 
 int atomic_peek(struct s_stack_fix *stk, atomic_int *value) {
-	*value = atomic_load(&stk->data[stk->size]);
+	atomic_int curr;
+
+	curr = atomic_load(&stk->size);
+	if (curr > 0 && curr <= MAXSIZE )
+		*value = stk->data[curr - 1];
+	else
+		return (0);
 	return (1);
 }

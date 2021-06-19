@@ -49,6 +49,7 @@ int main()
 	t_stack_fix *stk;
 	pthread_t t1[THREAD_COUNT];
 	int i;
+	atomic_int value;
 
 	
 //	заполняем стек простой функцией
@@ -68,6 +69,8 @@ int main()
 			pthread_join(t1[i], NULL);
 			i++;
 		}
+// при потоконебезопасной функции размер стека выходит за ограничение и 
+// происходит запись в элементы за максимальным размером 
 		printf("stk size = %d\n", stk->size);
 		show_stk(stk);
 		free(stk);
@@ -91,9 +94,16 @@ int main()
 			pthread_join(t1[i], NULL);
 			i++;
 		}
+// при использовании атомиков размер стека не выходит за ограничение и 
+// запись в элементы за максимальным размером не происходит 
 		printf("atomic stk size = %d\n", stk->size);
 		show_stk(stk);
-		
+// смотрим значение наверху стека
+		if (atomic_peek(stk, &value))
+			printf("peeked value = %d\n", value);
+		else
+			printf("nothing to peek\n");
+
 // опустошаем стек
 		i = 0;
 		while (i < THREAD_COUNT)
@@ -108,7 +118,11 @@ int main()
 			i++;
 		}
 		printf("atomic stk size = %d\n", stk->size);
-		show_stk(stk);
+// смотрим значение наверху стека (стек пуст - смотреть нечего)
+		if (atomic_peek(stk, &value))
+			printf("peeked value = %d\n", value);
+		else
+			printf("nothing to peek\n");
 		free(stk);
 		stk = NULL;
 	}
