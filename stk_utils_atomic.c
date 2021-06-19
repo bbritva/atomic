@@ -35,8 +35,8 @@ int atomic_pop(struct s_stack_fix *stk, atomic_int *value) {
 
 	curr = atomic_fetch_sub(&stk->size, 1);
 	usleep(SLEEP_TIME);
-	if (curr < MAXSIZE)
-		*value = stk->data[curr];
+	if (curr > 0 && curr <= MAXSIZE )
+		*value = stk->data[curr - 1];
 	else
 	{
 		atomic_fetch_add(&stk->size, 1);

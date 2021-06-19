@@ -10,6 +10,17 @@ void *atomic_fill_stack(void *stk)
 	return (NULL);
 }
 
+void *atomic_empty_stack(void *stk)
+{
+	int			i;
+	atomic_int	value;
+	
+	i = 0;
+	while (i < MAXSIZE && atomic_pop((t_stack_fix *)stk, &value))
+		i++;
+	return (NULL);
+}
+
 void *fill_stack(void *stk)
 {
 	int i;
@@ -57,7 +68,7 @@ int main()
 			pthread_join(t1[i], NULL);
 			i++;
 		}
-		printf("stk size = %lu\n", stk->size);
+		printf("stk size = %d\n", stk->size);
 		show_stk(stk);
 		free(stk);
 		stk = NULL;
@@ -80,7 +91,23 @@ int main()
 			pthread_join(t1[i], NULL);
 			i++;
 		}
-		printf("atomic stk size = %lu\n", stk->size);
+		printf("atomic stk size = %d\n", stk->size);
+		show_stk(stk);
+		
+// опустошаем стек
+		i = 0;
+		while (i < THREAD_COUNT)
+		{
+			pthread_create(&t1[i], NULL, atomic_empty_stack, (void *) stk);
+			i++;
+		}
+		i = 0;
+		while (i < THREAD_COUNT)
+		{
+			pthread_join(t1[i], NULL);
+			i++;
+		}
+		printf("atomic stk size = %d\n", stk->size);
 		show_stk(stk);
 		free(stk);
 		stk = NULL;
