@@ -12,6 +12,8 @@ int atomic_push(struct s_stack_fix *stk, atomic_int value)
 	atomic_int curr;
 
 	curr = atomic_fetch_add(&stk->size, 1);
+	// >>> RACES HERE!!! <<<
+	// just think of executing atomic_pop() right now
 	usleep(SLEEP_TIME);
 	if (curr < MAXSIZE)
 		stk->data[curr] = value;
@@ -36,6 +38,8 @@ int atomic_pop(struct s_stack_fix *stk, atomic_int *value)
 	atomic_int curr;
 
 	curr = atomic_fetch_sub(&stk->size, 1);
+	// >>> RACES HERE!!! <<<
+	// just think of executing atomic_push() right now
 	usleep(SLEEP_TIME);
 	if (curr > 0 && curr <= MAXSIZE )
 		*value = stk->data[curr - 1];
