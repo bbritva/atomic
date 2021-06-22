@@ -23,12 +23,26 @@ typedef struct		s_stack_fix {
 	atomic_int 		size;
 }					t_stack_fix;
 
-int push(struct s_stack_fix *stk, int value);
-int pop(struct s_stack_fix *stk, int *value);
-int peek(struct s_stack_fix *stk, int *value);
+typedef struct			s_stack_ptr {
+	atomic_int			*data[SIZE];
+	atomic_int 			size;
+}						t_stack_ptr;
 
-int atomic_push(struct s_stack_fix *stk, atomic_int value);
-int atomic_pop(struct s_stack_fix *stk, atomic_int *value);
-int atomic_peek(struct s_stack_fix *stk, atomic_int *value);
+int push(t_stack_fix *stk, int value);
+int pop(t_stack_fix *stk, int *value);
+int peek(t_stack_fix *stk, int *value);
+
+int atomic_push(t_stack_fix *stk, atomic_int value);
+int atomic_pop(t_stack_fix *stk, atomic_int *value);
+int atomic_peek(t_stack_fix *stk, atomic_int *value);
+
+int push2(t_stack_ptr *stk, int value);
+int pop2(t_stack_ptr *stk, int *value);
+int peek2(t_stack_ptr *stk, int *value);
+
+int atomic_push2(t_stack_ptr *stk, atomic_int value);
+int atomic_pop2(t_stack_ptr *stk, atomic_int *value);
+int atomic_peek2(t_stack_ptr *stk, atomic_int *value);
+
 
 #endif
